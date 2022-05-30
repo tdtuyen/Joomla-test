@@ -163,7 +163,39 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
 			throw new JDatabaseExceptionUnsupported('The MySQLi extension for PHP is not installed or enabled.');
 		}
 
-		$this->connection = @mysqli_connect(
+        /**
+         * @HACKCORE IMPORTANT
+         *
+         * Addition certificate if config mysqlissl enable
+         */
+        $config = JFactory::getConfig();
+        $is_ssl = $config->get( "dbssl" );
+        $ssl_verify = $config->get( "dbsslverify" );
+
+        $this->connection = mysqli_init();
+
+        if ( $is_ssl ) {
+            $ssl_key = $config->get( "dbsslkey" );
+            $ssl_cert = $config->get( "dbsslcert" );
+
+            @mysqli_ssl_set($this->connection, $ssl_key, $ssl_cert, null, null, null);
+        }
+
+        if ( $is_ssl && !$ssl_verify ) {
+            @mysqli_real_connect(
+                $this->connection, $this->options['host'], $this->options['user'], $this->options['password'], null, $this->options['port'], $this->options['socket'], MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT
+            );
+        } else {
+            @mysqli_real_connect(
+                $this->connection, $this->options['host'], $this->options['user'], $this->options['password'], null, $this->options['port'], $this->options['socket']
+            );
+        }
+
+        if ( $this->connection->connect_errno ) {
+            throw new JDatabaseExceptionConnecting('Could not connect to MySQL server.');
+        }
+        /* OLDCHANGE
+        $this->connection = @mysqli_connect(
 			$this->options['host'], $this->options['user'], $this->options['password'], null, $this->options['port'], $this->options['socket']
 		);
 
@@ -172,6 +204,8 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
 		{
 			throw new JDatabaseExceptionConnecting('Could not connect to MySQL server.');
 		}
+        /* ENDHACK */
+
 
 		// Set sql_mode to non_strict mode
 		mysqli_query($this->connection, "SET @@SESSION.sql_mode = '';");

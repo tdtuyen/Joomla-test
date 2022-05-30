@@ -250,6 +250,70 @@
 			filter="string"
 		/>
 
+		<!--
+		- @HACKCORE IMPORTANT
+		-
+		- Addition database ssl config
+		 -->
+		<field
+				name="dbssl"
+				type="radio"
+				label="COM_CONFIG_FIELD_DATABASE_SSL_LABEL"
+				description="COM_CONFIG_FIELD_DATABASE_SSL_DESC"
+				class="btn-group btn-group-yesno"
+				default="0"
+				showon="dbtype:mysqli"
+				filter="integer"
+		>
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+
+		<field
+				name="dbsslkey"
+				type="text"
+				label="COM_CONFIG_FIELD_DATABASE_SSL_KEY_LABEL"
+				description="COM_CONFIG_FIELD_DATABASE_SSL_KEY_DESC"
+				filter="string"
+				showon="dbtype:mysqli[AND]dbssl:1"
+				size="100"
+		/>
+
+		<field
+				name="dbsslcert"
+				type="text"
+				label="COM_CONFIG_FIELD_DATABASE_SSL_CERT_LABEL"
+				description="COM_CONFIG_FIELD_DATABASE_SSL_CERT_DESC"
+				filter="string"
+				showon="dbtype:mysqli[AND]dbssl:1"
+				size="100"
+		/>
+
+		<field
+				name="dbsslca"
+				type="text"
+				label="COM_CONFIG_FIELD_DATABASE_SSL_CA_LABEL"
+				description="COM_CONFIG_FIELD_DATABASE_SSL_CA_DESC"
+				filter="string"
+				showon="dbtype:mysqli[AND]dbssl:1"
+				size="100"
+		/>
+
+		<field
+				name="dbsslverify"
+				type="radio"
+				label="COM_CONFIG_FIELD_DATABASE_SSL_VERIFY_LABEL"
+				description="COM_CONFIG_FIELD_DATABASE_VERIFY_SSL_DESC"
+				class="btn-group btn-group-yesno"
+				default="1"
+				showon="dbtype:mysqli[AND]dbssl:1"
+				filter="integer"
+		>
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<!-- ENDHACK -->
+
 		<field
 			name="host"
 			type="text"

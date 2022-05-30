@@ -62,4 +62,9 @@ class JConfig {
 	public $lifetime = '15';
 	public $session_handler = 'database';
 	public $shared_session = '0';
+    public $dbssl = '0';
+    public $dbsslkey = '/etc/mysql/client-key.pem';
+    public $dbsslcert = '/etc/mysql/client-cert.pem';
+    public $dbsslca = '/etc/mysql/client-ca.pem';
+    public $dbsslverify = '0';
 }
